@@ -1,0 +1,6 @@
+[submodule "aideml"]
+	path = aideml
+	url = git@github.com:ycs-atc/aideml.git
+[submodule "mlebench-ex"]
+	path = mlebench-ex
+	url = git@github.com:ycs-atc/mlebench-ex.git
