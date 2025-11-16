@@ -1,5 +1,6 @@
 # MLE-bench [START]
 mlebench/competitions/**/kernels/
+mlebench/competitions/
 outputs/
 /data/
 /data_privateonly/
@@ -13,6 +14,7 @@ runs/*/metadata.json
 !runs/**/grading_report_*.json
 
 cache/
+pyenv/
 # MLE-bench [END]
 
 # MacOs
