@@ -1,6 +1,6 @@
 [submodule "aideml"]
 	path = aideml
-	url = git@github.com:ycs-atc/aideml.git
+	url = git@github.com:TuringGpt/aideml-form.git
 [submodule "mlebench-ex"]
 	path = mlebench-ex
-	url = git@github.com:ycs-atc/mlebench-ex.git
+	url = git@github.com:TuringGpt/mlebench-ex.git
