@@ -187,10 +187,15 @@ def is_dataset_prepared(competition: Competition, grading_only: bool = False) ->
 
 
 def is_api_exception(exception: Exception) -> bool:
-    # only import when necessary; otherwise kaggle asks for API key on import
-    from kaggle.rest import ApiException
-
-    return isinstance(exception, ApiException)
+    # Try to import ApiException from kaggle.rest (kaggle < 1.8.0)
+    # or fall back to requests.exceptions.HTTPError (kaggle >= 1.8.0)
+    try:
+        from kaggle.rest import ApiException
+        return isinstance(exception, ApiException)
+    except ImportError:
+        # kaggle >= 1.8.0 uses requests.exceptions.HTTPError instead
+        from requests.exceptions import HTTPError
+        return isinstance(exception, HTTPError)
 
 
 @retry(
@@ -214,8 +219,15 @@ def download_dataset(
 
     api = authenticate_kaggle_api()
 
-    # only import when necessary; otherwise kaggle asks for API key on import
-    from kaggle.rest import ApiException
+    # Import the appropriate exception class based on kaggle version
+    # kaggle < 1.8.0 uses kaggle.rest.ApiException
+    # kaggle >= 1.8.0 uses requests.exceptions.HTTPError
+    try:
+        from kaggle.rest import ApiException
+        KaggleApiException = ApiException
+    except ImportError:
+        from requests.exceptions import HTTPError
+        KaggleApiException = HTTPError
 
     try:
         api.competition_download_files(
@@ -224,7 +236,7 @@ def download_dataset(
             quiet=quiet,
             force=force,
         )
-    except ApiException as e:
+    except KaggleApiException as e:
         if _need_to_accept_rules(str(e)):
             logger.warning("You must accept the competition rules before downloading the dataset.")
             _prompt_user_to_accept_rules(competition_id)
